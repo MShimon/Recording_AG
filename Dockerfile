@@ -14,8 +14,8 @@ RUN pip install beautifulsoup4 lxml html5lib
 #USER ubuntu
 
 # install
-RUN echo '30 22 * * * cd /root/scripts; bash /root/scripts/GetSchedule.sh > /root/scripts/log_record.log' >> /etc/crontab
-RUN echo '45 22 * * * cd /root/scripts; /usr/local/bin/python3 /root/scripts/11_send_mail.py > /root/scripts/log_mail.log' >> /etc/crontab
+RUN echo '35 22 * * * cd /root/scripts; bash /root/scripts/GetSchedule.sh > /root/scripts/log_record.log' >> /etc/crontab
+RUN echo '50 22 * * * cd /root/scripts; /usr/local/bin/python3 /root/scripts/11_send_mail.py > /root/scripts/log_mail.log' >> /etc/crontab
 RUN echo '0 4 * * * cd /root/scripts; /usr/local/bin/python3 /root/scripts/21_Upload.py /root/scripts/record_files > /root/scripts/log_upload.log' >> /etc/crontab
 RUN echo '0 0 * * * find /root/scripts/recording -mtime +5 | xargs rm' >> /etc/crontab
 # start crontab

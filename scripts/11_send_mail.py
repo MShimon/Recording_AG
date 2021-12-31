@@ -8,10 +8,10 @@ import time
 
 smtp_host = 'smtp.gmail.com'
 smtp_port = 587
-from_email = 'xxxx@gmail.com' # 送信元のアドレス
-to_email = 'xxxx@gmail.com' # 送りたい先のアドレス
-username = 'xxxx@gmail.com' # Gmailのアドレス
-password = 'xxxx' # Gmailのパスワード
+from_email = 'recrad0000@gmail.com' # 送信元のアドレス
+to_email = 'recrad0000@gmail.com' # 送りたい先のアドレス
+username = 'recrad0000@gmail.com' # Gmailのアドレス
+password = 'Ncanon0315' # Gmailのパスワード
 
 #日時を取得
 month_tommorow = (datetime.datetime.now() + datetime.timedelta(days = 1)).month

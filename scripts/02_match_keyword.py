@@ -59,9 +59,8 @@ if __name__ == "__main__":
         for word in keywords:
             #番組名かパーソナリティー名がキーワードと一致したら、予約番組表に追加
             if (find_keyword(schedule_AG[k]["title"],word)) or (find_keyword(schedule_AG[k]["personality"],word)):
-                if not (schedule_AG[k]["repeat"]):#初回放送or生放送であれば
-                    reservation_AG[k] = schedule_AG[k]
-                    break#複数回のマッチングを避ける
+                reservation_AG[k] = schedule_AG[k]
+                break#複数回のマッチングを避ける
     
     ##--キーワード検索で引っかかった番組情報を予約番組表として保存--##
     #ディレクトリの作成

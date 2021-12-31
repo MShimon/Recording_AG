@@ -64,10 +64,18 @@ if __name__ == "__main__":
         dir_save_mp4_prog = DIR_SAVE_MP4 + "/" + rl["title"]
         if not os.path.exists(dir_save_mp4_prog):
             os.makedirs(dir_save_mp4_prog)
+        if rl["repeat"]:
+            dir_save_mp4_prog = dir_save_mp4_prog + "/repeat"
+            if not os.path.exists(dir_save_mp4_prog):
+                os.makedirs(dir_save_mp4_prog)
         #mp3
         dir_save_mp3_prog = DIR_SAVE_MP3 + "/" + rl["title"]
         if not os.path.exists(dir_save_mp3_prog):
             os.makedirs(dir_save_mp3_prog)
+        if rl["repeat"]:
+            dir_save_mp3_prog = dir_save_mp3_prog + "/repeat"
+            if not os.path.exists(dir_save_mp3_prog):
+                os.makedirs(dir_save_mp3_prog)
 
         delay_time = str(60 - MARGIN_BEGIN)#rtmpdump実行前のsleep時間
         time = str(MARGIN_BEGIN + 60*int(rl["time"]) + MARGIN_END)#録画単位は秒
