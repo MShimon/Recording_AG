@@ -26,7 +26,7 @@ if __name__ == "__main__":
             # 上位ディレクトリから順次作成
             flag_mkdir = False
             length_path = len(str(fil.parents[0]).split("/"))
-            dir_mkd = str(Path("FTP")/"record_files"/ext)
+            dir_mkd = str(Path("FTP")/"record_files_raspi3"/ext)
             for i in range(length_path):
                 if flag_mkdir:
                     dir_mkd_parent = dir_mkd
