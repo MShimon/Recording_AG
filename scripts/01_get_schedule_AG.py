@@ -46,7 +46,7 @@ def extract_program_info(program):
     # 差分計算
     time_begin = (datetime.strptime(time_begin,"%H:%M") + timedelta(days = delta_begin))
     time_end = (datetime.strptime(time_end,"%H:%M") + timedelta(days = delta_end))
-    time_duration = int((time_end - time_begin).total_seconds()/60) # convert to minute
+    time_duration = str(int((time_end - time_begin).total_seconds()/60)) # convert to minute
     # repeat
     repeat = "is-repeat" in program["class"]
 
