@@ -19,9 +19,12 @@ def extract_program_info(program):
     # title
     title = program.find("p",{"class":"dailyProgram-itemTitle"}).find("a").get_text()
     # personality
-    try:
-        personality = program.find("p",{"class":"dailyProgram-itemPersonality"}).find("a").get_text()
-    except:
+    list_personality = program.find("p",{"class":"dailyProgram-itemPersonality"}).find_all("a")
+    if len(list_personality) != 0:
+        personality = list_personality[0].get_text()
+        for p in list_personality[1:]:
+            personality = personality + "、" + p.get_text()
+    else:
         personality = "None"
     # onair
     onair = program.find("h3",{"dailyProgram-itemHeaderTime"}).get_text().split()[0]

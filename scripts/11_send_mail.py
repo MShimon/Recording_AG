@@ -1,26 +1,22 @@
-from email import message
-import smtplib
-import json
-import os
-from parameters import PWD
+import pickle
+import os.path
 import datetime
-import time
+import json
+from parameters import PWD
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+import base64
+from email.mime.text import MIMEText
+from apiclient import errors
+SCOPES = ['https://www.googleapis.com/auth/gmail.send'] # Gmail APIのスコープを設定
 
-smtp_host = 'smtp.gmail.com'
-smtp_port = 587
-from_email = 'sample@gmail.com' # 送信元のアドレス
-to_email = 'sample@gmail.com' # 送りたい先のアドレス
-username = 'sample@gmail.com' # Gmailのアドレス
-password = 'MailPassw0rd' # Gmailのパスワード
-
-#日時を取得
-month_tommorow = (datetime.datetime.now() + datetime.timedelta(days = 1)).month
-day_tommorow = (datetime.datetime.now() + datetime.timedelta(days = 1)).day
-
-#@brief
-#@param
-#@return
-def make_message():
+# -Functions- #
+# @brief :メール本文の作成
+# @return:メール本文(str形式)
+def create_text():
+    month_tommorow = (datetime.datetime.now() + datetime.timedelta(days = 1)).month
+    day_tommorow = (datetime.datetime.now() + datetime.timedelta(days = 1)).day
     mail_string = ""
     json_reservation = os.listdir(PWD + "/json/reservation/")
     if len(json_reservation) == 1:
@@ -31,33 +27,64 @@ def make_message():
         sch_reservation = json.load(open(PWD + "/json/reservation/" + json_reservation[0],"r"))
         for k in sch_reservation.keys():
             mail_string += '\n○' + sch_reservation[k]["title"]
-            mail_string += '\nパーソナリティ：' + sch_reservation[k]["personality"] 
-            mail_string += '\n放送開始時刻：' + sch_reservation[k]["onair"] 
-            mail_string += '\n録画時間：' + sch_reservation[k]["time"] + '分\n' 
+            if sch_reservation[k]["repeat"]:
+                mail_string = mail_string + "(リピート放送)"
+            mail_string += '\nパーソナリティ：' + sch_reservation[k]["personality"]
+            mail_string += '\n放送開始時刻：' + sch_reservation[k]["onair"]
+            mail_string += '\n録画時間：' + sch_reservation[k]["time"] + '分\n'
     else:
         mail_string = "error"
 
     return mail_string
 
-if __name__=="__main__":
-    # メールの内容を作成
-    msg = message.EmailMessage()
-    msg.set_content(make_message()) # メールの本文
-    msg['Subject'] = 'recording_demon' # 件名
-    msg['From'] = from_email # メール送信元
-    msg['To'] = to_email #メール送信先
-    
-    # メールサーバーへアクセス
-    for _ in range(1000):#最大ループ回数
-        try:
-            server = smtplib.SMTP(smtp_host, smtp_port)
-        except Exception as e:
-            time.sleep(10)#10秒待ってからもう一度実行
+# @brief :メール送信用のMIME形式のデータを作成する
+# @param :sender, メール送信者
+#         to, 宛先
+#         subject, メールタイトル
+# @return:MIME形式のメールデータ
+def create_message(sender, to, subject):
+    message = MIMEText(create_text())
+    message['from'] = sender
+    message['to'] = to
+    message['subject'] = subject
+    # base64でエンコードしてreturn
+    encode_message = base64.urlsafe_b64encode(message.as_bytes())
+    return {'raw': encode_message.decode()}
+
+# @brief :メール送信
+# @param :service, 認証情報
+#         user_id, user_id
+#         message, MIME形式のメールデータ
+def send_message(service, user_id, message):
+    try:
+        message = (service.users().messages().send(userId=user_id, body=message)
+                   .execute())
+        return message
+    except errors.HttpError as error:
+        print('An error occurred: %s' % error)
+
+if __name__ == '__main__':
+    # アクセストークンの取得
+    creds = None
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
         else:
-            break
-    server.ehlo()
-    server.starttls()
-    server.ehlo()
-    server.login(username, password)
-    server.send_message(msg)
-    server.quit()
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server()
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+    service = build('gmail', 'v1', credentials=creds)
+
+    # メール本文の作成
+    sender = 'example@gmail.com'
+    to = 'recrad0000@gmail.com'
+    subject = '録画番組一覧'
+    message = create_message(sender, to, subject)
+
+    # Gmail APIを呼び出してメール送信
+    send_message(service, 'me', message)

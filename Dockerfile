@@ -5,6 +5,7 @@ ENV TZ Asia/Tokyo
 RUN apt update
 RUN apt install -y ffmpeg cron at vim procps
 RUN pip install beautifulsoup4 lxml html5lib
+RUN pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
 # add sudo user
 #RUN groupadd -g 1000 ubuntu && \
 #    useradd  -g      ubuntu -G sudo -m -s /bin/bash ubuntu && \
