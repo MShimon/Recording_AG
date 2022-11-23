@@ -75,7 +75,10 @@ if __name__ == '__main__':
     # 明日の番組表を作成
     schedule_tommrow = {}
     for program in list_programs:
-        title, personality, onair, time_duration, repeat = extract_program_info(program)
+        try:
+            title, personality, onair, time_duration, repeat = extract_program_info(program)
+        except Exception as e:
+            continue
         # 各情報を詰め込む
         tmp_program = {}
         tmp_program["title"] = title
