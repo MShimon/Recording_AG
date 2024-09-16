@@ -105,8 +105,7 @@ if __name__ == "__main__":
         rec_hour = str(start_rec.hour) if len(str(start_rec.hour))==2 else "0" +  str(start_rec.hour)
         rec_minute = str(start_rec.minute) if len(str(start_rec.minute))==2 else "0" +  str(start_rec.minute)
         #コマンドの文字列作成
-        # command = "at -f " + DIR_SH + "/" + sh_name + " " + rec_hour+":"+rec_minute + " " + rec_month + rec_day + str(start_rec.year)[2:4]
-        command = 'echo "bash ' + DIR_SH + '/' + sh_name + '" | at ' + rec_hour+':'+rec_minute + ' ' + rec_month + rec_day + str(start_rec.year)[2:4]
+        command = "at -f " + DIR_SH + "/" + sh_name + " " + rec_hour+":"+rec_minute + " " + rec_month + rec_day + str(start_rec.year)[2:4]
         #コマンドを実行
         # print(command)
         subprocess.call(command,shell=True)

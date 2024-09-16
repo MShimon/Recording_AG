@@ -12,7 +12,7 @@ DIR_AG = PWD + "/json/schedule_A&G"
 DIR_RES = PWD + "/json/reservation"
 
 #A&G関連
-RTMP_URL_AG = "https://fms2.uniqueradio.jp/agqr10/aandg1.m3u8"#streamのurl
+RTMP_URL_AG = "https://agcdn02.cdnext.stream.ne.jp/hls2/basic/data/prog_index.m3u8"#streamのurl
 
 #録画関係
 MARGIN_BEGIN = 10#何秒前から録画するか　0~60
